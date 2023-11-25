@@ -16,7 +16,7 @@ class Adapter(private val trainers: List<Result>) : RecyclerView.Adapter<Adapter
 
         fun bind(result: Result) {
             Picasso.get().load(result.picture.thumbnail).into(fotoEntrenador)
-            nombreEntrenador.text = result.name.title.toString()+ result.name.first.toString() + result.name.last.toString()
+            nombreEntrenador.text = result.name.title.toString() + ". "+ result.name.first.toString()+ " " + result.name.last.toString()
         }
     }
 

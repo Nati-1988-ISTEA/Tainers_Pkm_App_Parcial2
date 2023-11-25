@@ -2,7 +2,8 @@ package com.example.tainers_pkm_app_parcial2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Adapter
+import android.util.Log
+import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewTrainer: RecyclerView
-    private lateinit var adapter: android.widget.Adapter
+    private lateinit var adapter: Adapter
     private var listadoDeEntrenadores = mutableListOf<Result>()
 
 
@@ -27,35 +28,45 @@ class MainActivity : AppCompatActivity() {
         recyclerViewTrainer = findViewById(R.id.trainerRV)
         recyclerViewTrainer.layoutManager = LinearLayoutManager(this)
 
-        adapter = android.widget.Adapter(listadoDeEntrenadores)
-        recyclerView.adapter = adapter
+        adapter = Adapter(listadoDeEntrenadores)
+        recyclerViewTrainer.adapter = adapter
 
         getListOftrainers()
+
+
+
 
     }
 
 
     private fun getListOftrainers(){
-        CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(ApiServiceTrainer::class.java).getTrainer("api")
-            val response = call.body()
 
-        runOnUiThread{
-            if (call.isSuccessful) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val call = getRetrofit().create(ApiServiceTrainer::class.java).getTrainer(END_POINT)
+                val response = call.body()
 
-                val entrenadores = response?.results
-                entrenadores?.forEach{
-                    listadoDeEntrenadores.add(it)
-                }
+                runOnUiThread{
+                    if (call.isSuccessful) {
+
+                        val entrenadores = response?.results ?: listOf()
+
+                        listadoDeEntrenadores.clear()
+                        listadoDeEntrenadores.addAll(entrenadores)
+
+                        adapter.notifyDataSetChanged()
+                        Toast.makeText(this@MainActivity, "Llamada exitosa", Toast.LENGTH_SHORT).show()
+
+
+
+
+                    }
+
 
 
 
             }
-
-
         }
 
-      }
 
     }
 
@@ -73,6 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val BASE_URL = "https://randomuser.me/"
+        const val END_POINT = "api/?results=9"
     }
 
 
