@@ -1,5 +1,6 @@
 package com.example.tainers_pkm_app_parcial2
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,13 +13,11 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerViewTrainer: RecyclerView
     private lateinit var adapter: Adapter
     private var listadoDeEntrenadores = mutableListOf<Result>()
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,40 +32,40 @@ class MainActivity : AppCompatActivity() {
 
         getListOftrainers()
 
-
-
+        adapter.onItemClickListener = {resultado ->
+            navegarDetalle(resultado)
+        }
 
     }
 
+    private fun navegarDetalle(resultado: Result) {
+        val intent = Intent(this, TrainerActivity:: class.java)
+        intent.putExtra("results", resultado)
+        startActivity(intent)
+    }
 
     private fun getListOftrainers(){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call = getRetrofit().create(ApiServiceTrainer::class.java).getTrainer(END_POINT)
+            val response = call.body()
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val call = getRetrofit().create(ApiServiceTrainer::class.java).getTrainer(END_POINT)
-                val response = call.body()
+            runOnUiThread{
+                if (call.isSuccessful) {
 
-                runOnUiThread{
-                    if (call.isSuccessful) {
+                    val entrenadores = response?.results ?: listOf()
 
-                        val entrenadores = response?.results ?: listOf()
+                    listadoDeEntrenadores.clear()
+                    listadoDeEntrenadores.addAll(entrenadores)
 
-                        listadoDeEntrenadores.clear()
-                        listadoDeEntrenadores.addAll(entrenadores)
+                    adapter.notifyDataSetChanged()
 
-                        adapter.notifyDataSetChanged()
-                        Toast.makeText(this@MainActivity, "Llamada exitosa", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, "Llamada exitosa", Toast.LENGTH_SHORT).show()
 
-
-
-
-                    }
-
-
-
+                }
 
             }
-        }
 
+        }
 
     }
 
@@ -84,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val BASE_URL = "https://randomuser.me/"
-        const val END_POINT = "api/?results=9"
+        const val END_POINT = "api/?results=5"
     }
 
 
