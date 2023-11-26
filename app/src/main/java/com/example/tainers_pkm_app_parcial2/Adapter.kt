@@ -27,9 +27,9 @@ class Adapter(private val trainers: List<Result>) : RecyclerView.Adapter<Adapter
             edadEntrenador.text ="Age: " + result.dob.age.toString()
 
             view.setOnClickListener{
-                onItemClickListener(result) // que se complete con si mismo
+                onItemClickListener(result)
 
-            } // agrego para pasarlo
+            }
         }
     }
 

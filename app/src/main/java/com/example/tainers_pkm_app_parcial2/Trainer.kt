@@ -27,7 +27,7 @@ data class Result (
     val registered: Dob,
     val phone: String,
     val cell: String,
-    val id: ID,
+    val id: ID?,
     val picture: Picture,
     val nat: String
 ): Parcelable
@@ -40,8 +40,8 @@ data class Dob (
 
 @Parcelize
 data class ID (
-    val name: String,
-    val value: String
+    val name: String?,
+    val value: String?
 ): Parcelable
 
 @Parcelize
@@ -50,7 +50,7 @@ data class Location (
     val city: String,
     val state: String,
     val country: String,
-    val postcode: Long,
+    val postcode: String,
     val coordinates: Coordinates,
     val timezone: Timezone
 ): Parcelable

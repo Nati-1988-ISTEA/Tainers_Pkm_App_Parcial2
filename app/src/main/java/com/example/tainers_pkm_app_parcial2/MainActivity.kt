@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter.onItemClickListener = {resultado ->
             navegarDetalle(resultado)
+
         }
 
     }
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
                     adapter.notifyDataSetChanged()
 
-                    Toast.makeText(this@MainActivity, "Llamada exitosa", Toast.LENGTH_SHORT).show()
+
 
                 }
 
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val BASE_URL = "https://randomuser.me/"
-        const val END_POINT = "api/?results=5"
+        const val END_POINT = "api/?results=15"
     }
 
 
